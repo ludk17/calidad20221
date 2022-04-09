@@ -1,4 +1,6 @@
+using FinancialApp.Web.DB;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,11 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
+    .AddCookie(options => {
         options.LoginPath = "/auth/login";
     });
 
+builder.Services.AddDbContext<DbEntities>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("dev")) 
+);
 
 var app = builder.Build();
 
