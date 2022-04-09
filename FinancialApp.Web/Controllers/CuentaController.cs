@@ -1,15 +1,19 @@
+using System.Security.Claims;
 using FinancialApp.Web.DB;
 using FinancialApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialApp.Web.Controllers;
 
+[Authorize]
 public class CuentaController : Controller
 {
     [HttpGet]
     public IActionResult Index()
     {
-        var cuentas = DbEntities.Cuentas;
+        var cuentas = DbEntities.Cuentas.Where(o => o.UsuarioId == GetLoggedUser().Id).ToList();
+        ViewBag.Total = cuentas.Any() ? cuentas.Sum(o => o.Monto) : 0; 
         return View(cuentas);
     }
     
@@ -35,6 +39,7 @@ public class CuentaController : Controller
         }
 
         cuenta.Id = getNextId();
+        cuenta.UsuarioId = GetLoggedUser().Id;
         DbEntities.Cuentas.Add(cuenta);
         return RedirectToAction("Index");
 
@@ -74,5 +79,12 @@ public class CuentaController : Controller
         if (DbEntities.Cuentas.Count == 0)
             return 1;
         return DbEntities.Cuentas.Max(o => o.Id) + 1;
+    }
+
+    private Usuario GetLoggedUser()
+    {
+        var claim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+        var username = claim.Value;
+        return DbEntities.Usuarios.First(o => o.Username == username);
     }
 }

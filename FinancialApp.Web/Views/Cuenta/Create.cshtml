@@ -33,6 +33,12 @@
                     @Html.ValidationMessage("TipoCuentaId")
                 </div>
                 
+                <div class="mb-3">
+                    <label for="Monto">Monto</label>
+                    <input type="text" class="form-control" Name="Monto" id="Monto" value="@Model.Monto">
+                    @Html.ValidationMessage("Monto")
+                </div>
+                
                 <br>
                 <button class="btn btn-primary">Guardar</button>
                 <a href="/cuenta/index" class="btn btn-link">Cancelar</a>
