@@ -1,4 +1,5 @@
 using FinancialApp.Web.DB;
+using FinancialApp.Web.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddDbContext<DbEntities>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("dev")) 
 );
+
+builder.Services.AddTransient<ITipoCuentaRepositorio, TipoCuentaRepositorio>();
+builder.Services.AddTransient<ICuentaRepositorio, CuentaRepositorio>();
 
 var app = builder.Build();
 

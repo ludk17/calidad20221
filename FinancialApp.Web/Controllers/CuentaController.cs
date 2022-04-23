@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using FinancialApp.Web.DB;
 using FinancialApp.Web.Models;
+using FinancialApp.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,14 @@ namespace FinancialApp.Web.Controllers;
 [Authorize]
 public class CuentaController : Controller
 {
+    private readonly ITipoCuentaRepositorio _tipoCuentaRepositorio;
     private DbEntities _dbEntities;
-    public CuentaController(DbEntities dbEntities)
+    public CuentaController(ITipoCuentaRepositorio tipoCuentaRepositorio, DbEntities dbEntities)
     {
+        _tipoCuentaRepositorio = tipoCuentaRepositorio;
         _dbEntities = dbEntities;
     }
-    
+
     [HttpGet]
     public IActionResult Index()
     {
@@ -29,10 +32,10 @@ public class CuentaController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        ViewBag.TipoDeCuentas = _dbEntities.TipoCuentas.ToList();
+        ViewBag.TipoDeCuentas = _tipoCuentaRepositorio.ObtenerTodos();
         return View(new Cuenta());
     }
-    
+
     [HttpPost]
     public IActionResult Create(Cuenta cuenta)
     {
