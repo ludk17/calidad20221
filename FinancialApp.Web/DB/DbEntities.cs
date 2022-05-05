@@ -6,8 +6,10 @@ namespace FinancialApp.Web.DB;
 
 public class DbEntities: DbContext
 {
-    public DbSet<Cuenta> Cuentas { get; set; }
-    public DbSet<TipoCuenta> TipoCuentas { get; set; }
+    public virtual DbSet<Cuenta> Cuentas { get; set; }
+    public virtual DbSet<TipoCuenta> TipoCuentas { get; set; }
+
+    public DbEntities(){}
     public DbEntities(DbContextOptions<DbEntities> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

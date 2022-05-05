@@ -22,9 +22,10 @@ public class CuentaController : Controller
     [HttpGet]
     public IActionResult Index()
     {
+        var user = GetLoggedUser();
         var cuentas = _dbEntities.Cuentas
             .Include(o => o.TipoCuenta)
-            .Where(o => o.UsuarioId == GetLoggedUser().Id).ToList();
+            .Where(o => o.UsuarioId == user.Id).ToList();
         ViewBag.Total = cuentas.Any() ? cuentas.Sum(o => o.Monto) : 0; 
         return View(cuentas);
     }
